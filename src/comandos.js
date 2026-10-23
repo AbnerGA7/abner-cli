@@ -81,6 +81,7 @@ function subir() {
 // ───────────────────────── comandos ─────────────────────────
 
 export async function nuevo() {
+  console.clear();
   p.intro(pc.bgMagenta(pc.black(' abner nuevo ')));
   exigirGit();
   await revisarIdentidad();
@@ -132,12 +133,41 @@ export async function nuevo() {
   p.outro(pc.green('¡Proyecto listo! 🚀'));
 }
 
-async function crearEnGitHub() {
-  if (!existe('gh')) {
-    const comando = process.platform === 'win32' ? 'winget install GitHub.cli'
-      : process.platform === 'darwin' ? 'brew install gh' : 'sudo apt install gh';
-    fallar('Falta GitHub CLI.', `Instálalo con:  ${comando}  y vuelve a ejecutar  abner nuevo`);
+// Instaladores de GitHub CLI por sistema: [programa, argumentos]
+const INSTALAR_GH = {
+  win32: ['winget', ['install', '--id', 'GitHub.cli', '-e', '--accept-source-agreements', '--accept-package-agreements']],
+  darwin: ['brew', ['install', 'gh']],
+  linux: ['sudo', ['apt', 'install', '-y', 'gh']],
+};
+
+function rutaGhWindows() {
+  // winget no actualiza el PATH de esta terminal: buscamos gh donde se instala
+  const base = process.env.ProgramFiles || 'C:\\Program Files';
+  const ruta = `${base}\\GitHub CLI`;
+  if (existsSync(`${ruta}\\gh.exe`)) process.env.PATH = `${ruta};${process.env.PATH}`;
+}
+
+async function asegurarGh() {
+  if (existe('gh')) return;
+  const [programa, args] = INSTALAR_GH[process.platform] || [];
+  const texto = programa ? `${programa} ${args.join(' ')}` : '';
+  if (!programa || !existe(programa === 'sudo' ? 'apt' : programa)) {
+    fallar('Falta GitHub CLI.', `Instálalo desde https://cli.github.com y vuelve a ejecutar  abner nuevo`);
   }
+  p.log.warn('Para crear repos hace falta GitHub CLI (gh) y no lo tienes.');
+  const ok = seguro(await p.confirm({ message: `¿Lo instalo ahora? ${pc.dim(`(${texto})`)}` }));
+  if (!ok) fallar('Sin gh no se puede crear el repo.', `Instálalo con:  ${texto}`);
+  p.log.step('Instalando GitHub CLI…');
+  const r = sh(programa, args, { interactive: true });
+  if (process.platform === 'win32') rutaGhWindows();
+  if (!r.ok || !existe('gh')) {
+    fallar('No se pudo instalar automáticamente.', `Prueba a mano:  ${texto}  y abre una terminal nueva.`);
+  }
+  p.log.success('GitHub CLI instalado');
+}
+
+async function crearEnGitHub() {
+  await asegurarGh();
   if (!sh('gh', ['auth', 'status']).ok) {
     p.log.info('Se abrirá el navegador para conectar tu cuenta de GitHub.');
     sh('gh', ['auth', 'login', '--hostname', 'github.com', '--git-protocol', 'https', '--web'], { interactive: true });
@@ -161,6 +191,7 @@ async function crearEnGitHub() {
 
 // Un solo commit con todo y subir. Acepta el mensaje directo: abner sube "arreglo menú"
 export async function sube(mensajeDirecto) {
+  console.clear();
   p.intro(pc.bgCyan(pc.black(' abner sube ')));
   exigirRepo();
   await revisarIdentidad();
@@ -188,6 +219,7 @@ export async function sube(mensajeDirecto) {
 
 // Varios commits separados: eliges qué archivos van en cada uno.
 export async function commits() {
+  console.clear();
   p.intro(pc.bgGreen(pc.black(' abner commits ')));
   exigirRepo();
   await revisarIdentidad();
@@ -224,6 +256,7 @@ export async function commits() {
 }
 
 export async function estado() {
+  console.clear();
   p.intro(pc.bgBlue(pc.black(' abner estado ')));
   exigirRepo();
   const lista = cambios();
@@ -235,6 +268,7 @@ export async function estado() {
 }
 
 export async function historial() {
+  console.clear();
   p.intro(pc.bgBlue(pc.black(' abner historial ')));
   exigirRepo();
   if (!tieneCommits()) return p.outro('Aún no hay commits.');
@@ -249,6 +283,7 @@ export async function historial() {
 
 // Deshace el último commit sin perder los cambios (solo si aún no se subió).
 export async function deshacer() {
+  console.clear();
   p.intro(pc.bgRed(pc.black(' abner deshacer ')));
   exigirRepo();
   if (!tieneCommits()) return p.outro('No hay commits que deshacer.');

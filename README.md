@@ -32,6 +32,8 @@ Inicia, guarda y sube tu código **sin memorizar comandos**.
 | 🔄 **Pull antes de push** | Trae lo que hay en GitHub antes de subir; si hay conflicto, se detiene sin romper nada. |
 | 🌿 **Cualquier rama** | Sube a la rama en la que estás, no solo a `main`. |
 | ↩️ **Deshacer seguro** | Deshace el último commit sin perder archivos, y solo si aún no se subió. |
+| 🛠️ **Instala GitHub CLI por ti** | Si falta `gh`, te ofrece instalarlo (winget, brew o apt) y abre el navegador para conectar tu cuenta. |
+| 🌐 **Crea el repo** | Público o privado, con el nombre de tu carpeta sugerido. |
 | 🔒 **Sin inyección de comandos** | Los mensajes nunca pasan por la shell: comillas, `;` o `&` son solo texto. |
 
 ## 📦 Instalación
