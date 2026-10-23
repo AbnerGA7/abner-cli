@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 import { createRequire } from 'node:module';
-import { p, pc, banner, seguro } from '../src/ui.js';
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { homedir } from 'node:os';
+import { join } from 'node:path';
+import { p, pc, banner, bienvenida, seguro } from '../src/ui.js';
 import * as cmd from '../src/comandos.js';
 
 const { version } = createRequire(import.meta.url)('../package.json');
@@ -28,9 +31,23 @@ const COMANDOS = {
   deshacer: cmd.deshacer,
 };
 
+// Marca en ~/.abner para mostrar la bienvenida solo la primera vez.
+function primeraVez() {
+  const marca = join(homedir(), '.abner', 'bienvenida');
+  if (existsSync(marca)) return false;
+  try {
+    mkdirSync(join(homedir(), '.abner'), { recursive: true });
+    writeFileSync(marca, new Date().toISOString());
+  } catch { /* sin permisos: la mostramos y ya */ }
+  return true;
+}
+
 async function menu() {
-  console.clear();
-  banner();
+  if (primeraVez()) bienvenida(version);
+  else {
+    console.clear();
+    banner();
+  }
   const eleccion = seguro(await p.select({
     message: '¿Qué hacemos hoy?',
     options: [
@@ -46,7 +63,10 @@ async function menu() {
 }
 
 if (orden === '--version' || orden === '-v') console.log(version);
-else if (orden === '--help' || orden === '-h' || orden === 'ayuda') console.log(AYUDA);
+else if (orden === '--help' || orden === '-h' || orden === 'ayuda') {
+  banner();
+  console.log(AYUDA);
+}
 else if (!orden) await menu();
 else if (COMANDOS[orden]) await COMANDOS[orden]();
 else {
