@@ -56,10 +56,15 @@ function subir() {
   const s = p.spinner();
   if (git('ls-remote', '--exit-code', '--heads', 'origin', rama).ok) {
     s.start('Trayendo cambios de GitHub primero');
-    const pull = git('pull', '--rebase', '--autostash', 'origin', rama);
+    let pull = git('pull', '--rebase', '--autostash', 'origin', rama);
+    if (!pull.ok) {
+      // el rebase falla con historiales que ya tienen merges: probamos un merge normal
+      git('rebase', '--abort');
+      pull = git('pull', '--no-rebase', '--no-edit', 'origin', rama);
+    }
     if (!pull.ok) {
       s.stop(pc.red('Hay conflictos con lo que está en GitHub'));
-      git('rebase', '--abort');
+      git('merge', '--abort');
       fallar('Tus commits están a salvo en tu computadora.', 'Alguien cambió los mismos archivos. Resuelve con  git pull  y vuelve a ejecutar abner.');
     }
     s.stop('Al día con GitHub');
