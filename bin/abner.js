@@ -13,7 +13,7 @@ const AYUDA = `
 ${pc.bold('Uso:')} abner ${pc.dim('[comando]')}
 
   ${pc.cyan('nuevo')}       Inicia el proyecto y lo sube a GitHub
-  ${pc.cyan('sube')} ${pc.dim('"msg"')}  Guarda todo en un commit y lo sube
+  ${pc.cyan('sube')} ${pc.dim('"msg"')}  Guarda y sube: eliges todo en uno o detallado
   ${pc.cyan('commits')}     Varios commits: eliges qué archivos van en cada uno
   ${pc.cyan('estado')}      Qué falta guardar y qué falta subir
   ${pc.cyan('historial')}   Últimos 15 commits
@@ -51,7 +51,7 @@ async function menu() {
   const eleccion = seguro(await p.select({
     message: '¿Qué hacemos hoy?',
     options: [
-      { value: 'sube', label: '🚀 Subir cambios', hint: 'un commit con todo' },
+      { value: 'sube', label: '🚀 Subir cambios', hint: 'todo en uno o detallado' },
       { value: 'commits', label: '🧩 Varios commits', hint: 'separar por archivos' },
       { value: 'estado', label: '🔍 Ver estado' },
       { value: 'historial', label: '📜 Historial' },

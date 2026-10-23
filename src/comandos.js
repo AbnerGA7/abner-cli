@@ -189,7 +189,7 @@ async function crearEnGitHub() {
   s.stop(pc.green(`Repo creado: ${r.out.split('\n').find((l) => l.startsWith('https')) || nombre}`));
 }
 
-// Un solo commit con todo y subir. Acepta el mensaje directo: abner sube "arreglo menú"
+// Guarda (en uno o en varios commits, a elección) y sube. Acepta el mensaje directo: abner sube "arreglo menú"
 export async function sube(mensajeDirecto) {
   console.clear();
   p.intro(pc.bgCyan(pc.black(' abner sube ')));
@@ -202,7 +202,17 @@ export async function sube(mensajeDirecto) {
     const mas = lista.length > 15 ? pc.dim(`\n…y ${lista.length - 15} más`) : '';
     p.log.step(`Cambios (${lista.length}):\n${vista}${mas}`);
     const archivos = await avisarSensibles(lista);
-    if (archivos.length) {
+    const modo = archivos.length > 1 && !mensajeDirecto
+      ? seguro(await p.select({
+        message: '¿Cómo quieres guardar estos cambios?',
+        options: [
+          { value: 'uno', label: '📦 Todo en un solo commit', hint: 'rápido' },
+          { value: 'detallado', label: '🧩 Commits detallados', hint: 'eliges qué archivos van en cada uno' },
+        ],
+      }))
+      : 'uno';
+    if (modo === 'detallado') await commitsDetallados(archivos);
+    else if (archivos.length) {
       const mensaje = mensajeDirecto || (await pedirMensaje());
       commitear(mensaje, archivos.map((a) => a.archivo));
       p.log.success(`Commit: ${pc.dim(mensaje)}`);
@@ -224,10 +234,23 @@ export async function commits() {
   exigirRepo();
   await revisarIdentidad();
 
-  let hechos = 0;
-  let restantes = await avisarSensibles(cambios());
-  if (!restantes.length) p.log.info('No hay archivos cambiados.');
+  const lista = await avisarSensibles(cambios());
+  if (!lista.length) p.log.info('No hay archivos cambiados.');
+  await commitsDetallados(lista);
 
+  if (!remoto()) return p.outro('Commits guardados en tu computadora (sin GitHub enlazado).');
+  const pendientes = pendientesDeSubir();
+  if (!pendientes.length) return p.outro('Nada que subir.');
+  p.note(pendientes.join('\n'), `${pendientes.length} commit(s) listos para subir`);
+  const ok = seguro(await p.confirm({ message: '¿Subirlos todos ahora a GitHub?' }));
+  if (ok) subir();
+  p.outro(ok ? pc.green('✨ Todo arriba') : 'Quedan guardados; súbelos luego con  abner sube');
+}
+
+// Bucle de commits: en cada vuelta eliges archivos y mensaje, hasta acabar o parar.
+async function commitsDetallados(archivos) {
+  let hechos = 0;
+  let restantes = archivos;
   while (restantes.length) {
     p.log.step(pc.bold(`Commit #${hechos + 1}`) + pc.dim(`  · quedan ${restantes.length} archivo(s)`));
     const elegidos = seguro(await p.multiselect({
@@ -245,14 +268,7 @@ export async function commits() {
     const otro = seguro(await p.confirm({ message: `Quedan ${restantes.length} archivo(s). ¿Hacer otro commit?` }));
     if (!otro) break;
   }
-
-  if (!remoto()) return p.outro('Commits guardados en tu computadora (sin GitHub enlazado).');
-  const pendientes = pendientesDeSubir();
-  if (!pendientes.length) return p.outro('Nada que subir.');
-  p.note(pendientes.join('\n'), `${pendientes.length} commit(s) listos para subir`);
-  const ok = seguro(await p.confirm({ message: '¿Subirlos todos ahora a GitHub?' }));
-  if (ok) subir();
-  p.outro(ok ? pc.green('✨ Todo arriba') : 'Quedan guardados; súbelos luego con  abner sube');
+  return hechos;
 }
 
 export async function estado() {

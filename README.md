@@ -26,7 +26,7 @@ Inicia, guarda y sube tu código **sin memorizar comandos**.
 | | |
 |---|---|
 | 🎛️ **Menú con flechas** | Escribe `abner` y elige qué hacer. Nada de recordar comandos. |
-| 🧩 **Varios commits a la vez** | Separa tus cambios en commits ordenados eligiendo qué archivos van en cada uno. |
+| 🧩 **Todo en uno o detallado** | Al subir eliges: un solo commit rápido, o varios commits ordenados eligiendo qué archivos van en cada uno. |
 | 🏷️ **Mensajes con tipo** | Eliges *Nueva función*, *Arreglo*, *Diseño*… y se escribe `feat:`, `fix:`, `style:` por ti. |
 | 🛡️ **Protege tus claves** | Te avisa antes de subir `.env`, `.pem` o `credentials.json`, y crea un `.gitignore` decente. |
 | 🔄 **Pull antes de push** | Trae lo que hay en GitHub antes de subir; si hay conflicto, se detiene sin romper nada. |
@@ -65,7 +65,7 @@ npm link
 ```bash
 abner                   # abre el menú
 abner nuevo             # git init + .gitignore + primer commit + repo en GitHub
-abner sube              # un commit con todo y lo sube
+abner sube              # te pregunta: ¿todo en uno o commits detallados?
 abner sube "fix: menú"  # lo mismo, con el mensaje directo
 abner commits           # varios commits separados por archivos
 abner estado            # qué falta guardar y qué falta subir
