@@ -35,6 +35,17 @@ Inicia, guarda y sube tu código **sin memorizar comandos**.
 
 ## 📦 Instalación
 
+Un solo comando:
+
+```bash
+npm install -g github:AbnerGA7/abner-cli
+```
+
+Listo: el comando `abner` ya funciona en cualquier carpeta. Para actualizarlo, ejecuta el mismo comando otra vez.
+
+<details>
+<summary>¿Quieres modificar el código? Instálalo en modo desarrollo</summary>
+
 ```bash
 git clone https://github.com/AbnerGA7/abner-cli.git
 cd abner-cli
@@ -42,7 +53,7 @@ npm install
 npm link
 ```
 
-Listo: el comando `abner` ya funciona en cualquier carpeta.
+</details>
 
 > Para crear repos desde la terminal necesitas [GitHub CLI](https://cli.github.com) (`winget install GitHub.cli`). Abner te lo recuerda si falta.
 
