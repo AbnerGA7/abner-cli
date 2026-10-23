@@ -1,0 +1,32 @@
+{
+  "name": "abner-cli",
+  "version": "1.0.0",
+  "description": "Tu asistente de Git y GitHub en la terminal: inicia, guarda y sube tu código sin memorizar comandos.",
+  "type": "module",
+  "bin": {
+    "abner": "bin/abner.js"
+  },
+  "files": [
+    "bin",
+    "src"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node bin/abner.js"
+  },
+  "keywords": [
+    "git",
+    "github",
+    "cli",
+    "commit",
+    "abner"
+  ],
+  "author": "Abner",
+  "license": "MIT",
+  "dependencies": {
+    "@clack/prompts": "^0.9.1",
+    "picocolors": "^1.1.1"
+  }
+}
