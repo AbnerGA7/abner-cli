@@ -1,6 +1,6 @@
 {
   "name": "@abnerg7/abner",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Tu asistente de Git y GitHub en la terminal: inicia, guarda y sube tu código sin memorizar comandos.",
   "type": "module",
   "bin": {
