@@ -12,6 +12,7 @@
 
 Inicia, guarda y sube tu código **sin memorizar comandos**.
 
+[![npm](https://img.shields.io/npm/v/@abnerg7/abner?color=cb3837&logo=npm)](https://www.npmjs.com/package/@abnerg7/abner)
 ![node](https://img.shields.io/badge/node-%3E%3D18-5fa04e?logo=node.js&logoColor=white)
 ![license](https://img.shields.io/badge/licencia-MIT-8b5cf6)
 ![idioma](https://img.shields.io/badge/hecho%20en-español-ef4444)
@@ -38,7 +39,7 @@ Inicia, guarda y sube tu código **sin memorizar comandos**.
 Un solo comando:
 
 ```bash
-npm install -g github:AbnerGA7/abner-cli
+npm install -g @abnerg7/abner
 ```
 
 Listo: el comando `abner` ya funciona en cualquier carpeta. Para actualizarlo, ejecuta el mismo comando otra vez.

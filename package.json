@@ -1,5 +1,5 @@
 {
-  "name": "abner-cli",
+  "name": "@abnerg7/abner",
   "version": "1.0.0",
   "description": "Tu asistente de Git y GitHub en la terminal: inicia, guarda y sube tu código sin memorizar comandos.",
   "type": "module",
@@ -24,6 +24,14 @@
     "abner"
   ],
   "author": "Abner",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AbnerGA7/abner-cli.git"
+  },
+  "homepage": "https://github.com/AbnerGA7/abner-cli#readme",
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "MIT",
   "dependencies": {
     "@clack/prompts": "^0.9.1",
