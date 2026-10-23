@@ -10,7 +10,8 @@ export function sh(cmd, args = [], { interactive = false } = {}) {
   });
   return {
     ok: r.status === 0,
-    out: (r.stdout || '').trim(),
+    // solo trimEnd: git status usa un espacio inicial con significado (" M archivo")
+    out: (r.stdout || '').trimEnd(),
     err: (r.stderr || '').trim() || (r.error ? r.error.message : ''),
   };
 }
